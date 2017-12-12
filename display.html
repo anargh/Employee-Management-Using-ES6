@@ -1,0 +1,47 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title> Employee Management</title>
+<meta charset="utf-8">
+<!--CSS IMPORT -->
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<nav class="nav-container">
+  <p class="nav-logo-text">Employee Management</p>
+  <ul class="navbar-menu">
+    <li><a onclick="logout()" href="#">Logout</a></li>
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+
+<div class="container">
+  <table id="showdata" class="showdata">
+    <caption class="heading">Employee List</caption>
+    <thead>
+      <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>DOB</th>
+      <th>Salary</th>
+      <th>Phone</th>
+      <th>Email</th>
+      <th>Action</th>
+      </tr>
+    </thead>
+  </table>
+  <span class="info-message error-notice" id="tableErrorBox"></span>
+  <div class="button-container">
+    <a href="addemp.html" class="emp-button">Add Employee</a>
+  </div>
+
+  <div class="updatedRows"></div>
+</div>
+
+<!-- JAVASCRIPT IMPORT -->
+<script type="text/javascript" src="js/login.js"></script>
+<script type="text/javascript" src="js/table.js"></script>
+</body>
+</html>

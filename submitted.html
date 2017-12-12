@@ -1,0 +1,96 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>Employee Management</title>
+<meta charset="utf-8">
+<!--CSS IMPORT -->
+<link rel="stylesheet" href="style.css">
+<!--JAVASCRIPT IMPORT -->
+<script type="text/javascript" src="js/login.js"></script>
+</head>
+
+<body>
+
+<nav class="nav-container">
+  <p class="nav-logo-text">Employee Management</p>
+  <ul class="navbar-menu">
+    <li><a href="display.html">Employee List</a></li>
+    <li><a onclick="logout()" href="#">Logout</a></li>
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+
+<div class="container">
+
+  <form class="submitted-form">
+    <p class="heading">Submitted Data</p>
+
+    <span class="info-message"></span>
+    <div class="emp-element">
+      <label for="employeeID">Employee ID: </label>
+      <label class="submit-data" id="employeeID"></label>
+    </div>
+
+    <div class="emp-element">
+      <label for="employeeName">Employee Name: </label>
+      <label class="submit-data" id="employeeName"></label>
+    </div>
+
+    <div class="emp-element">
+      <label for="eDayDOB">Date of Birth: </label>
+
+      <!-- Day -->
+      <label class="submit-data" id="eDayDOB"></label>
+
+      <!-- Month -->
+      <label class="submit-data" id="eMonthDOB"></label>
+
+      <!-- Year -->
+      <label class="submit-data" id="eYearDOB"></label>
+    </div>
+
+    <div class="emp-element">
+      <label for="employeeSalary">Salary Per Month: </label>
+      <label class="submit-data" id="employeeSalary"></label>
+    </div>
+
+    <div class="emp-element">
+      <label for="employeePhone">Phone Number: </label>
+      <label class="submit-data" id="employeePhone"></label>
+    </div>
+
+    <div class="emp-element">
+      <label for="employeeEmail">E-Mail ID: </label>
+      <label class="submit-data" id="employeeEmail"></label>
+    </div>
+
+    <div class="button-container">
+      <a href="display.html" class="emp-button">Back</a>
+    </div>
+
+  </form>
+
+</div>
+
+<!-- JAVASCRIPT IMPORT -->
+<script>
+
+var submittedData = JSON.parse(sessionStorage.getItem("submittedData"));
+var labelElements = document.querySelectorAll("label.submit-data");
+if(submittedData == null) {
+  document.querySelector("span").innerText = "Submitted data could not be loaded. Please submit the form again."
+}
+else {
+  document.querySelector("span").innerText = "";
+  for(var loopIndex = 0; loopIndex < labelElements.length; loopIndex++) {
+    for(var key in submittedData) {
+      if(labelElements[loopIndex].id == key)
+        labelElements[loopIndex].innerText = submittedData[key].toUpperCase();
+    }
+  }
+}
+sessionStorage.removeItem("submittedData");
+</script>
+
+</body>
+</html>

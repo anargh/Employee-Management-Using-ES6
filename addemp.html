@@ -1,0 +1,84 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title> Employee Management</title>
+<meta charset="utf-8">
+<!--CSS IMPORT -->
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<nav class="nav-container">
+  <p class="nav-logo-text">Employee Management</p>
+  <ul class="navbar-menu">
+    <li><a href="display.html">Employee List</a></li>
+    <li><a onclick="logout()" href="#">Logout</a></li>
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="container">
+
+  <form class="addemployee" id="addemployee" name="addemployee">
+    <p class="heading">Enter Employee Details</p>
+
+    <div class="emp-element">
+      <label class="input-required" for="employeeID">Employee ID</label>
+      <input id="employeeID" type="text" size="7" maxlength="7" placeholder="ACE0000" required>
+      <span id="info-employeeID" class="info-message"></span>
+    </div>
+
+    <div class="emp-element">
+      <label class="input-required" for="employeeName">Employee Name</label>
+      <input id="employeeName" type="text" placeholder="Full Name" required>
+      <span id="info-employeeName" class="info-message"></span>
+    </div>
+
+    <div class="emp-element">
+      <label class="input-required" for="eDayDOB">Date of Birth</label>
+
+      <!-- Day -->
+      <select id="eDayDOB">
+      </select>
+
+      <!-- Month -->
+      <select id="eMonthDOB">
+      </select>
+
+      <!-- Year -->
+      <select id="eYearDOB">
+      </select>
+      <span id="info-employeeDOB" class="info-message"></span>
+    </div>
+
+    <div class="emp-element">
+      <label class="input-required" for="employeeSalary">Salary Per Month</label>
+      <input id="employeeSalary" type="text" placeholder="Salary in INR" maxlength="7" required>
+      <span id="info-employeeSalary" class="info-message"></span>
+    </div>
+
+    <div class="emp-element">
+      <label class="input-required" for="employeePhone">Phone Number</label>
+      <input id="employeePhone" type="tel" placeholder="Phone Number" minlength="10" maxlength="10" required>
+      <span id="info-employeePhone" class="info-message"></span>
+    </div>
+
+    <div class="emp-element">
+      <label class="input-required" for="employeeEmail">E-Mail ID</label>
+      <input id="employeeEmail" type="email" placeholder="Email" required>
+      <span id="info-employeeEmail" class="info-message"></span>
+    </div>
+
+    <div class="button-container">
+      <button class="emp-button" id="addemp-button" type="submit">Submit</button>
+      <button class="emp-button" type="reset" >Reset Form</button>
+    </div>
+
+  </form>
+
+</div>
+<!-- JAVASCRIPT IMPORT -->
+<script type="text/javascript" src="js/main.js"></script>
+</body>
+</html>

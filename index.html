@@ -1,0 +1,43 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>Employee Management</title>
+<meta charset="utf-8">
+<link rel="stylesheet" href="style.css">
+<!-- JAVASCRIPT IMPORT -->
+<script type="text/javascript" src="js/main.js"></script>
+<script type="text/javascript" src="js/login.js"></script>
+</head>
+<body>
+
+<nav class="nav-container">
+  <p class="nav-logo-text">Employee Management</p>
+  <div class="clearfix"></div>
+</nav>
+
+<div class="container">
+  <form class="sigin">
+    <p class="heading">Admin Login</p>
+
+      <div class="emp-element">
+        <label class="input-required" for="username">Username:</label>
+
+        <input id="username" type="text" placeholder="Username" maxlength="15" required>
+        <span id="info-username" class="info-message"></span>
+      </div>
+
+      <div class="emp-element">
+        <label class="input-required" for="password">Password:</label>
+        <input id="password" type="password" placeholder="Password" maxlength="15" required>
+        <span id="info-password" class="info-message"></span>
+      </div>
+
+    <div class="button-container">
+      <button class="emp-button" onclick="validateLogin()" type="button">Log In</button>
+    </div>
+
+  </form>
+</div>
+
+</body>
+</html>
