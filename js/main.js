@@ -1,4 +1,3 @@
-
 // Regular expression declaration
 const regexPattern = {
     username : /[^a-zA-Z0-9]/,
