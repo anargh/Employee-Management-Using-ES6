@@ -27,40 +27,34 @@
 
     <span class="info-message"></span>
     <div class="emp-element">
-      <label for="employeeID">Employee ID: </label>
+      <label>Employee ID: </label>
       <label class="submit-data" id="employeeID"></label>
     </div>
 
     <div class="emp-element">
-      <label for="employeeName">Employee Name: </label>
+      <label>Employee Name: </label>
       <label class="submit-data" id="employeeName"></label>
     </div>
 
     <div class="emp-element">
-      <label for="eDayDOB">Date of Birth: </label>
+      <label>Date of Birth: </label>
 
-      <!-- Day -->
-      <label class="submit-data" id="eDayDOB"></label>
+      <label class="submit-data" id="employeeDOB"></label>
 
-      <!-- Month -->
-      <label class="submit-data" id="eMonthDOB"></label>
-
-      <!-- Year -->
-      <label class="submit-data" id="eYearDOB"></label>
     </div>
 
     <div class="emp-element">
-      <label for="employeeSalary">Salary Per Month: </label>
+      <label>Salary Per Month: </label>
       <label class="submit-data" id="employeeSalary"></label>
     </div>
 
     <div class="emp-element">
-      <label for="employeePhone">Phone Number: </label>
+      <label>Phone Number: </label>
       <label class="submit-data" id="employeePhone"></label>
     </div>
 
     <div class="emp-element">
-      <label for="employeeEmail">E-Mail ID: </label>
+      <label>E-Mail ID: </label>
       <label class="submit-data" id="employeeEmail"></label>
     </div>
 
@@ -85,7 +79,7 @@ else {
   for(var loopIndex = 0; loopIndex < labelElements.length; loopIndex++) {
     for(var key in submittedData) {
       if(labelElements[loopIndex].id == key)
-        labelElements[loopIndex].innerText = submittedData[key].toUpperCase();
+        labelElements[loopIndex].innerText = submittedData[key];
     }
   }
 }

@@ -1,3 +1,4 @@
+
 // Regular expression declaration
 const regexPattern = {
     username : /[^a-zA-Z0-9]/,
@@ -46,37 +47,36 @@ let employeeDetail = {
   }
 };
 
-
 class Employee {
-
   constructor() {
     let self = this;
     document.getElementById("addemployee").addEventListener("submit", function(event) {
       event.preventDefault();
-      self.validateFields();
+      self.addEmployee();
     });
   }
 
   addEmployee() {
+    if(this.validateFields() == false)
+      return false;
     let submitData = {
       "employeeID" : employeeDetail["employeeID"]["element"].value,
-      "employeeName" : employeeDetail["employeeID"]["element"].value,
-      "employeeDOB" : employeeDetail["eDayDOB"]["element"].value.toString() +
-                      employeeDetail["eMonthDOB"]["element"].value.toString() +
-                      employeeDetail["eYearDOB"]["element"].value.toString(),
+      "employeeName" : employeeDetail["employeeName"]["element"].value,
+      "employeeDOB" : daySelectElement.value.toString()+"-"+
+                      monthSelectElement.value.toString().toUpperCase()+"-"+
+                      yearSelectElement.value.toString(),
       "employeeSalary" : employeeDetail["employeeSalary"]["element"].value,
       "employeeEmail" : employeeDetail["employeeEmail"]["element"].value,
       "employeePhone" : employeeDetail["employeePhone"]["element"].value
     }
 
     alert("Submitted Data.");
-    //sessionStorage.setItem("submittedData",JSON.stringify(employeeDetail));
-    //window.location.href = "submitted.html";
+    sessionStorage.setItem("submittedData",JSON.stringify(submitData));
+    window.location.href = "submitted.html";
   }
 
   validateFields() {
 
-    console.log("Called validate employee");
     if(regexPattern["employeeID"].test(employeeDetail["employeeID"]["element"].value) == false) { //Check if ACEID is in proper format
       employeeDetail["employeeID"]["errorMessage"] = "Employee ID should be in the format <strong>ACE</strong> followed by 4 digits.";
       employeeDetail["employeeID"]["error"] = true;
@@ -85,10 +85,8 @@ class Employee {
       employeeDetail["employeeID"]["errorMessage"] = "Please enter valid ACE ID. ID Format: <strong>ACE</strong> followed by 4 digits.";
       employeeDetail["employeeID"]["error"] = true;
     }
-    else {
+    else
       employeeDetail["employeeID"]["error"] = false;
-      console.log("ID: "+employeeDetail["employeeID"]["error"]);
-    }
 
     //Check Employee Name
     if((employeeDetail["employeeName"]["element"].value.length < employeeDetail["employeeName"]["minlength"]) || (employeeDetail["employeeName"]["element"].value.length > employeeDetail["employeeName"]["maxlength"])) {
@@ -137,15 +135,19 @@ class Employee {
     else
       employeeDetail["employeeEmail"]["error"] = false;
 
+    let status = true;
     //Check for the results of validation
     for(let key in employeeDetail) {
-      if(employeeDetail[key]["error"] == true)
+      if(employeeDetail[key]["error"] == true) {
         printError(employeeDetail[key]);
-      else {
-        removeError(employeeDetail[key]);
+        status = false;
       }
+      else
+        removeError(employeeDetail[key]);
     }
+    return status;
   }
+
 }
 
 window.addEventListener('load', () => new Employee());
@@ -169,8 +171,7 @@ function printError(errorInfo) {                                                
   document.getElementById(errorElementName).innerHTML = elementErrorMsg;
 }
 
-function removeError(errorInfo) {
-          console.log("Remove Error called");                                           //To remove printed errors.
+function removeError(errorInfo) {                                               //To remove printed errors.
   let errorElementName = "info-" + errorInfo["element"].id;
   document.getElementById(errorElementName).style.display = "none";
   document.getElementById(errorElementName).innerHTML = "";
