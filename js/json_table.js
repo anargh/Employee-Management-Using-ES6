@@ -1,3 +1,4 @@
+'use strict';
 //DEFINE CUSTOM ERRORS
 class RequestError extends Error {
   constructor(message) {
@@ -131,9 +132,9 @@ class JsonData extends JsonXhrRequest {
       let editButton = document.createElement("button");
       editButton.innerText = "Edit";
       tableRow.insertCell(-1).appendChild(editButton);
+      const self = this;
       editButton.addEventListener("click", function(event) {
-        //editRow(event.target.parentNode);                                         //Make each created row editable
-        console.log("Clicked Edit");
+        self.editRow(event.target.parentNode);                                         //Make each created row editable
       });
     }
     document.getElementById("nextButton").disabled = (tableStructure.currentPage == tableStructure.totalPages) ? true : false;
@@ -148,6 +149,82 @@ class JsonData extends JsonXhrRequest {
     if((direction == "prev") && (tableStructure.currentPage > 1)) {
       --tableStructure.currentPage;
       this.getRecordsForPage(tableStructure.currentPage);
+    }
+  }
+  editRow(cellElement) {
+    let parentRow = cellElement.parentNode;
+    for(let loopIndex = 1; loopIndex < parentRow.childNodes.length - 1; loopIndex++) {
+      let input = document.createElement("input");
+      input.type = "text";
+      input.size = "7";
+      input.value = parentRow.childNodes[loopIndex].innerText;
+      parentRow.childNodes[loopIndex].innerText = "";
+      parentRow.childNodes[loopIndex].appendChild(input);
+    }
+    cellElement.getElementsByTagName("button")[0].remove();
+    let update = document.createElement("button");
+    update.innerText = "Update";
+    cellElement.appendChild(update);
+    const self = this;
+    update.addEventListener("click", function(event) {
+      let cellElement = event.target.parentNode;
+      self.updateRow(cellElement, update);
+    });
+  }
+
+  updateRow(cellElement, button) {
+    let parentRow = cellElement.parentNode;
+    let input = parentRow.querySelectorAll("input");
+    for(let loopIndex = 0; loopIndex < input.length; loopIndex++) {
+      let inputValue = document.createTextNode(input[loopIndex].value);
+      input[loopIndex].parentNode.replaceChild(inputValue, input[loopIndex]);
+    }
+    let editButton = document.createElement("button");
+    editButton.innerText = "Edit";
+    cellElement.replaceChild(editButton, button);
+    this.printUpdatedRows(parentRow);
+    const self = this;
+    editButton.addEventListener("click", function(event) {
+      self.editRow(event.target.parentNode)
+    });
+  }
+
+  printUpdatedRows(tableRow) {
+    let container, table;
+    if(document.querySelector(".updatedRows table") == null) {
+      container = document.querySelector(".updatedRows");
+      table = document.createElement("table");
+      table.className = "showdata";
+      table.createCaption().appendChild(document.createTextNode("Updated Rows"));
+      table.createCaption().className = "heading";
+      container.appendChild(table);
+      this.fillHeaders(table);
+    }
+    table = document.querySelector(".updatedRows table");
+    this.checkRowExists(tableRow.childNodes[0], table);                                                     // Was the row previously updated? If so, remove old row.
+    let row = table.insertRow(-1);
+    let loopIndex = 0;
+    while(loopIndex < tableRow.childNodes.length - 1) {
+      let cell = row.insertCell(-1);
+      cell.appendChild(document.createTextNode(tableRow.childNodes[loopIndex].innerText));
+      loopIndex++;
+    }
+  }
+
+  fillHeaders(table) {
+    let row = table.insertRow();
+    let headerTitle = ["ACEID", "Name", "Date of Birth", "Salary", "Phone", "Email"];
+    for(let loopIndex = 0; loopIndex < headerTitle.length; loopIndex++) {
+      row.insertCell(loopIndex).innerText = headerTitle[loopIndex];
+    }
+  }
+
+  checkRowExists(aceIdCell, table) {
+    for(let loopIndex = 1; loopIndex < table.rows.length; loopIndex++) {
+      if(aceIdCell.innerText == table.rows[loopIndex].childNodes[0].innerText) {
+        table.deleteRow(table.rows[loopIndex].rowIndex);
+        return;
+      }
     }
   }
   removeRows(rowCount) {
