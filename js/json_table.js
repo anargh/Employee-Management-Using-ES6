@@ -1,4 +1,3 @@
-'use strict';
 //DEFINE CUSTOM ERRORS
 class RequestError extends Error {
   constructor(message) {
@@ -34,7 +33,6 @@ class JsonXhrRequest {
   }
 
   requestJson(url,requestMethod) {
-    console.log("Requesting...");
     let jsonRequest = new XMLHttpRequest();
     jsonRequest.open(requestMethod, url);
     jsonRequest.responseType = this.responseType;
@@ -44,7 +42,6 @@ class JsonXhrRequest {
         if(jsonRequest.status == 200 && jsonRequest.readyState == 4) {
           employeeJson = jsonRequest.response;
           document.dispatchEvent(responseRecieved);
-          console.log("Response Recieved");
         }
         else if(jsonRequest.status >= 300)
           throw new RequestError("There was a problem retrieving the requested resource.");
@@ -62,7 +59,6 @@ class JsonData extends JsonXhrRequest {
   }
 
   initTable(pages) {
-    console.log("Initializing");
     if(pages > 1) {
       let buttonContainer = document.querySelector('.button-container');
       let prevButton = document.createElement("button");
@@ -71,15 +67,13 @@ class JsonData extends JsonXhrRequest {
       prevButton.className = "emp-button";
       buttonContainer.appendChild(prevButton);
       const self = this;
-      prevButton.addEventListener("click", function(event) {
-        self.scrollRecords(event.target);
-      });
+      prevButton.addEventListener("click", (event) => this.scrollRecords(event.target));
       for(let loopIndex = 1; loopIndex <= tableStructure.totalPages; loopIndex++) {
         let pageNumberButton = document.createElement("button");
         pageNumberButton.innerText = loopIndex;
         pageNumberButton.className = "emp-button";
         buttonContainer.appendChild(pageNumberButton);
-        pageNumberButton.addEventListener("click", function(event) {
+        pageNumberButton.addEventListener("click", (event) => {
           tableStructure.currentPage = Number(event.target.innerText);
           self.getRecordsForPage(tableStructure.currentPage);
         });
@@ -89,9 +83,7 @@ class JsonData extends JsonXhrRequest {
       nextButton.innerText = "next";
       nextButton.className = "emp-button";
       buttonContainer.appendChild(nextButton);
-      nextButton.addEventListener("click", function(event) {
-        self.scrollRecords(event.target);
-      });
+      nextButton.addEventListener("click", (event) => self.scrollRecords(event.target);
     }
     tableStructure.isTableInit = true;
   }
@@ -112,12 +104,12 @@ class JsonData extends JsonXhrRequest {
     this.insertIntoTable(singlePageRecords);
   }
   insertIntoTable(records) {
-    for(let objectKey in records) {                                     //Get each employee's detail
-                                                                        //Store all details of one employee
+    for(let objectKey in records) {                                             //Get each employee's detail
+
       let tableRow = tableStructure.tableElement.insertRow(-1);
-      let singleRecord = records[objectKey];
-      for(let objectKey in singleRecord) {                                  //Insert each row. Row count = 0 initially.                                                           //INITIALIZE to -1 for each row
-        try {                                                                     //GO through details of an employee
+      let singleRecord = records[objectKey];                                    //Store all details of one employee
+      for(let objectKey in singleRecord) {                                       //Insert each row. Row count = 0 initially.                                                           //INITIALIZE to -1 for each row
+        try {                                                                   //GO through details of an employee
           if(singleRecord[objectKey] == undefined || singleRecord[objectKey] == "") {
             throw new EmptyFieldError("Field " + objectKey + " is empty. Please check the data.");
             break;
@@ -133,9 +125,7 @@ class JsonData extends JsonXhrRequest {
       editButton.innerText = "Edit";
       tableRow.insertCell(-1).appendChild(editButton);
       const self = this;
-      editButton.addEventListener("click", function(event) {
-        self.editRow(event.target.parentNode);                                         //Make each created row editable
-      });
+      editButton.addEventListener("click", (event) => self.editRow(event.target.parentNode));                                         //Make each created row editable
     }
     document.getElementById("nextButton").disabled = (tableStructure.currentPage == tableStructure.totalPages) ? true : false;
     document.getElementById("prevButton").disabled = (tableStructure.currentPage == 1) ? true : false;
@@ -166,7 +156,7 @@ class JsonData extends JsonXhrRequest {
     update.innerText = "Update";
     cellElement.appendChild(update);
     const self = this;
-    update.addEventListener("click", function(event) {
+    update.addEventListener("click", (event) => {
       let cellElement = event.target.parentNode;
       self.updateRow(cellElement, update);
     });
@@ -184,9 +174,7 @@ class JsonData extends JsonXhrRequest {
     cellElement.replaceChild(editButton, button);
     this.printUpdatedRows(parentRow);
     const self = this;
-    editButton.addEventListener("click", function(event) {
-      self.editRow(event.target.parentNode)
-    });
+    editButton.addEventListener("click", (event) =>  self.editRow(event.target.parentNode));
   }
 
   printUpdatedRows(tableRow) {
