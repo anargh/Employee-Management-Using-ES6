@@ -71,20 +71,18 @@ class Employee {
     sessionStorage.setItem("submittedData",JSON.stringify(submitData));
     window.location.href = "submitted.html";
   }
-
   validateFields() {
-
+    //Check employee ID
     if(regexPattern["employeeID"].test(employeeDetail["employeeID"]["element"].value) == false) { //Check if ACEID is in proper format
-      employeeDetail["employeeID"]["errorMessage"] = "Employee ID should be in the format <strong>ACE</strong> followed by 4 digits.";
+      employeeDetail["employeeID"]["errorMessage"] = "Employee ACEID should be in the format <strong>ACE</strong> followed by 4 digits.";
       employeeDetail["employeeID"]["error"] = true;
     }
     else if(Number(employeeDetail["employeeID"]["element"].value.substring(3,7)) < 1) { //ACEID: 0000 is invalid.
-      employeeDetail["employeeID"]["errorMessage"] = "Please enter valid ACE ID. ID Format: <strong>ACE</strong> followed by 4 digits.";
+      employeeDetail["employeeID"]["errorMessage"] = "Please enter valid ACEID. ID Format: <strong>ACE</strong> followed by 4 digits.";
       employeeDetail["employeeID"]["error"] = true;
     }
     else
       employeeDetail["employeeID"]["error"] = false;
-
     //Check Employee Name
     if((employeeDetail["employeeName"]["element"].value.length < employeeDetail["employeeName"]["minlength"]) || (employeeDetail["employeeName"]["element"].value.length > employeeDetail["employeeName"]["maxlength"])) {
       employeeDetail["employeeName"]["errorMessage"] = `Length of name should be between ${employeeDetail["employeeName"]["minlength"]} to ${employeeDetail["employeeName"]["maxlength"]} characters.`;
