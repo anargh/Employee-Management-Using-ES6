@@ -4,8 +4,6 @@
 * {
   font-family: "Raleway", sans-serif;
   font-size: 14px;
-  /*margin: 0;
-  box-sizing: border-box; */
 }
 
 .clearfix {
@@ -71,10 +69,15 @@ body {
   border-radius: 5px;
   box-shadow: #ddd;
   color: #fff;
+  font-weight: 900;
   text-decoration: none;
   text-transform: uppercase;
   margin-right: 3px;
   padding: 10px;
+}
+.emp-button[disabled] {
+  color: grey;
+  cursor: not-allowed;
 }
 
 .button-container {
