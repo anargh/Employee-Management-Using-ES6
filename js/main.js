@@ -49,12 +49,12 @@ let employeeDetail = {
 class Employee {
   constructor() {
     let self = this;
-    document.getElementById("addemployee").addEventListener("submit", function(event) {
-      event.preventDefault();
-      self.addEmployee();
-    });
+    if(document.getElementById("addemployee"))
+      document.getElementById("addemployee").addEventListener("submit", function(event) {
+        event.preventDefault();
+        self.addEmployee();
+      });
   }
-
   addEmployee() {
     if(this.validateFields() == false)
       return false;
