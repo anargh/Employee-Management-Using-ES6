@@ -9,7 +9,6 @@ const regexPattern = {
     phoneNumber : /^[7-9]/,
     word : /\w+/g
 }
-
 let employeeDetail = {
   employeeID : {
         element : document.getElementById("employeeID"),
@@ -45,7 +44,6 @@ let employeeDetail = {
     errorMessage : ""
   }
 };
-
 class Employee {
   constructor() {
     let self = this;
