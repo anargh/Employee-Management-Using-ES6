@@ -83,7 +83,7 @@ class JsonData extends JsonXhrRequest {
       nextButton.innerText = "next";
       nextButton.className = "emp-button";
       buttonContainer.appendChild(nextButton);
-      nextButton.addEventListener("click", (event) => self.scrollRecords(event.target);
+      nextButton.addEventListener("click", (event) => self.scrollRecords(event.target));
     }
     tableStructure.isTableInit = true;
   }

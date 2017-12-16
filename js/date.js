@@ -62,31 +62,54 @@ const monthObj = {
           }
 }
 
-let daySelectElement = document.getElementById("eDayDOB");
-let monthSelectElement = document.getElementById("eMonthDOB");
-let yearSelectElement = document.getElementById("eYearDOB");
-
-if(daySelectElement != null && monthSelectElement != null && yearSelectElement != null)
-  document.addEventListener("DOMContentLoaded", () => new DateOptions());
-class DateOptions {
+class Calendar {
   constructor() {
-    this.createMonthOptions();
-    this.createYearOptions();
-    this.createDayOptions();
+    this.day = document.getElementById("eDayDOB");
+    this.month = document.getElementById("eMonthDOB");
+    this.year = document.getElementById("eYearDOB");
+
+  }
+
+  createMonthOptions() {
+    console.log("Called create month "+new Date(Date.now()).toLocaleString());
+    let monthOptionElement = "";
+    for(let objectKey in monthObj) {                                            //To create day options
+      monthOptionElement = document.createElement("option");
+      monthOptionElement.value = objectKey;
+      monthOptionElement.innerText = monthObj[objectKey]["name"];
+      this.month.appendChild(monthOptionElement);
+    }
+    console.log("Value: "+this.month.value);
+    this.month.addEventListener("change", this.createDayOptions());               //Add listener for month value change.
+  }
+
+  createYearOptions() {
+    console.log("Called create year "+new Date(Date.now()).toLocaleString());                                                  //Create year option element
+    let currentYear = new Date().getFullYear();
+    let yearOptionElement = "";
+    for (let loopYear = currentYear - 60; loopYear < (currentYear - 18); ++loopYear) {
+      yearOptionElement = document.createElement("option");
+      this.year.appendChild(yearOptionElement);
+      yearOptionElement.value = loopYear;
+      yearOptionElement.innerText = loopYear;
+    }
+    this.year.addEventListener("change", this.createDayOptions());                  //Add listener for year value change.
   }
 
   createDayOptions() {
-    console.log("Called create day"+new Date(Date.now()).toLocaleString());
+    console.log("Called create day "+new Date(Date.now()).toLocaleString());
     let selectedDay;                                                            //Create day options
-    if(daySelectElement.hasChildNodes()) {
-      selectedDay = daySelectElement.value;                                     //Remember the day selected previously
-      removeChildElements(daySelectElement);                                    //Remove all child elements
+    if(this.day.hasChildNodes()) {
+      selectedDay = this.day.value;                                             //Remember the day selected previously
+      removeChildElements(this.day.firstChild);                                            //Remove all child elements
     }
-    let selectedYear = yearSelectElement.value;
-    let selectedMonth = monthSelectElement.value.toString();
+    console.log(this);
+    let selectedYear = this.year.value;
+    let selectedMonth = this.month.value;
+    console.log("Value: "+this.month.value);
     let countOfDays = monthObj[selectedMonth]["count"];
-    if(selectedMonth == "feb" && isLeapYear(Number(selectedYear)))
-      countOfDays = monthObj[selectedMonth]["leapYearCount"];
+    if(this.month.value == "feb" && isLeapYear(Number(this.year.value)))
+      countOfDays = monthObj[this.month.value]["leapYearCount"];
     let dayOption = "";
     for(let loopIndex = 1; loopIndex <= parseInt(countOfDays) ; ++loopIndex) {  //Set day options according to month selected
       dayOption = document.createElement("option");
@@ -99,35 +122,9 @@ class DateOptions {
         dayOption.setAttribute("value", loopIndex);
         dayOption.innerText = loopIndex;
       }
-      daySelectElement.appendChild(dayOption);
+      this.day.appendChild(dayOption);
       if(Number(selectedDay) == dayOption.value)
-        daySelectElement.value = loopIndex;                                     //If previously a day was selected, keep it. Else day will be set to 1
-    }
-  }
-
-  createMonthOptions() {
-    console.log("Called create month"+new Date(Date.now()).toLocaleString());
-    monthSelectElement.addEventListener("change", this.createDayOptions);       //Create month options
-    let monthOption = "";
-    for(let objectKey in monthObj) {                                            //To create day options
-      monthOption = document.createElement("option");
-      monthOption.setAttribute("value",objectKey);
-      monthOption.innerText = monthObj[objectKey]["name"];
-      monthSelectElement.appendChild(monthOption);
-    }
-  }
-
-  createYearOptions() {
-    console.log("Called create year"+new Date(Date.now()).toLocaleString());                                                  //Create year option element
-    yearSelectElement.addEventListener("change", this.createDayOptions);                  //Add listener for year value change.
-    let currentDate = new Date();
-    let currentYear = currentDate.getFullYear();
-    let yearOptionElement = "";
-    for (let loopYear = currentYear - 60; loopYear < (currentYear - 18); ++loopYear) {
-      yearOptionElement = document.createElement("option");
-      yearSelectElement.appendChild(yearOptionElement);
-      yearOptionElement.setAttribute("value", loopYear);
-      yearOptionElement.innerText = loopYear;
+        this.day.value = loopIndex;                                     //If previously a day was selected, keep it. Else day will be set to 1
     }
   }
 
@@ -154,3 +151,10 @@ function isLeapYear(yearValue) {                                                
   else
     return false;
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  let calendar = new Calendar();
+  calendar.createYearOptions();
+  calendar.createMonthOptions();
+  calendar.createDayOptions();
+});
