@@ -39,7 +39,7 @@ class JsonXhrRequest {
     jsonRequest.send();
     jsonRequest.onreadystatechange = () => {
       try {
-        if(jsonRequest.status == REQUEST_STATUS_OK  && jsonRequest.readyState == 4) {
+        if(jsonRequest.status == REQUEST_STATUS_OK && jsonRequest.readyState == 4) {
           employeeJson = jsonRequest.response;
           document.dispatchEvent(responseRecieved);
         }
