@@ -24,7 +24,7 @@ const tableStructure = {
 }
 
 let employeeJson = { };
-
+const REQUEST_STATUS_OK = 200;
 //JSON DATA CLASS
 class JsonXhrRequest {
   constructor(url,requestMethod) {
@@ -39,11 +39,11 @@ class JsonXhrRequest {
     jsonRequest.send();
     jsonRequest.onreadystatechange = () => {
       try {
-        if(jsonRequest.status == 200 && jsonRequest.readyState == 4) {
+        if(jsonRequest.status == REQUEST_STATUS_OK  && jsonRequest.readyState == 4) {
           employeeJson = jsonRequest.response;
           document.dispatchEvent(responseRecieved);
         }
-        else if(jsonRequest.status >= 300)
+        else
           throw new RequestError("There was a problem retrieving the requested resource.");
       }
       catch(error if error instanceof RequestError) {
