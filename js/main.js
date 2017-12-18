@@ -24,6 +24,15 @@ let employeeDetail = {
         error : false,
         errorMessage : ""
       },
+  eDayDOB : {
+        element : document.getElementById("eDayDOB")
+      },
+  eMonthDOB : {
+        element : document.getElementById("eMonthDOB")
+      },
+  eYearDOB : {
+        element : document.getElementById("eYearDOB")
+      },
   employeeSalary : {
         element : document.getElementById("employeeSalary"),
         minlength : 5,
@@ -59,9 +68,9 @@ class Employee {
     let submitData = {
       "employeeID" : employeeDetail["employeeID"]["element"].value,
       "employeeName" : employeeDetail["employeeName"]["element"].value,
-      "employeeDOB" : daySelectElement.value.toString()+"-"+
-                      monthSelectElement.value.toString().toUpperCase()+"-"+
-                      yearSelectElement.value.toString(),
+      "employeeDOB" : employeeDetail["eDayDOB"]["element"].value.toString()+"-"+
+                      employeeDetail["eMonthDOB"]["element"].value.toString().toUpperCase()+"-"+
+                      employeeDetail["eYearDOB"]["element"].value.toString(),
       "employeeSalary" : employeeDetail["employeeSalary"]["element"].value,
       "employeeEmail" : employeeDetail["employeeEmail"]["element"].value,
       "employeePhone" : employeeDetail["employeePhone"]["element"].value
@@ -137,8 +146,9 @@ class Employee {
         printError(employeeDetail[key]);
         status = false;
       }
-      else
-        removeError(employeeDetail[key]);
+      else {
+        if(employeeDetail[key].hasOwnProperty("error")) removeError(employeeDetail[key]);
+      }
     }
     return status;
   }
