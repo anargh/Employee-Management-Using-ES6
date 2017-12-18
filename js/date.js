@@ -69,9 +69,7 @@ class Calendar {
     this.year = document.getElementById("eYearDOB");
 
   }
-
   createMonthOptions() {
-    console.log("Called create month "+new Date(Date.now()).toLocaleString());
     let monthOptionElement = "";
     for(let objectKey in monthObj) {                                            //To create day options
       monthOptionElement = document.createElement("option");
@@ -79,12 +77,9 @@ class Calendar {
       monthOptionElement.innerText = monthObj[objectKey]["name"];
       this.month.appendChild(monthOptionElement);
     }
-    console.log("Value: "+this.month.value);
-    this.month.addEventListener("change", this.createDayOptions());               //Add listener for month value change.
+    this.month.addEventListener("change", () => this.createDayOptions());               //Add listener for month value change.
   }
-
-  createYearOptions() {
-    console.log("Called create year "+new Date(Date.now()).toLocaleString());                                                  //Create year option element
+  createYearOptions() {                                                //Create year option element
     let currentYear = new Date().getFullYear();
     let yearOptionElement = "";
     for (let loopYear = currentYear - 60; loopYear < (currentYear - 18); ++loopYear) {
@@ -93,20 +88,16 @@ class Calendar {
       yearOptionElement.value = loopYear;
       yearOptionElement.innerText = loopYear;
     }
-    this.year.addEventListener("change", this.createDayOptions());                  //Add listener for year value change.
+    this.year.addEventListener("change", () => this.createDayOptions());                  //Add listener for year value change.
   }
-
   createDayOptions() {
-    console.log("Called create day "+new Date(Date.now()).toLocaleString());
     let selectedDay;                                                            //Create day options
     if(this.day.hasChildNodes()) {
       selectedDay = this.day.value;                                             //Remember the day selected previously
-      removeChildElements(this.day.firstChild);                                            //Remove all child elements
+      removeChildElements(this.day);                                            //Remove all child elements
     }
-    console.log(this);
     let selectedYear = this.year.value;
     let selectedMonth = this.month.value;
-    console.log("Value: "+this.month.value);
     let countOfDays = monthObj[selectedMonth]["count"];
     if(this.month.value == "feb" && isLeapYear(Number(this.year.value)))
       countOfDays = monthObj[this.month.value]["leapYearCount"];
@@ -127,7 +118,6 @@ class Calendar {
         this.day.value = loopIndex;                                     //If previously a day was selected, keep it. Else day will be set to 1
     }
   }
-
   setDateOptions(element, optionValue) {                                 //Set the date values in select elements
     if(element.hasChildNodes()) {
       let options = element.options;
