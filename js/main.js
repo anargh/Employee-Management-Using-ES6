@@ -9,71 +9,77 @@ const regexPattern = {
     phoneNumber : /^[7-9]/,
     word : /\w+/g
 }
-let employeeDetail = {
-  employeeID : {
-        element : document.getElementById("employeeID"),
-        minlength : 7,
-        maxlength : 7,
-        error : false,
-        errorMessage : ""
-      },
-  employeeName : {
-        element : document.getElementById("employeeName"),
-        minlength : 3,
-        maxlength : 16,
-        error : false,
-        errorMessage : ""
-      },
-  eDayDOB : {
-        element : document.getElementById("eDayDOB")
-      },
-  eMonthDOB : {
-        element : document.getElementById("eMonthDOB")
-      },
-  eYearDOB : {
-        element : document.getElementById("eYearDOB")
-      },
-  employeeSalary : {
-        element : document.getElementById("employeeSalary"),
-        minlength : 5,
-        maxlength : 7,
-        error : false,
-        errorMessage : ""
-      },
-  employeeEmail : {
-        element : document.getElementById("employeeEmail"),
-        error : false,
-        errorMessage : ""
-      },
-  employeePhone : {
-    element : document.getElementById("employeePhone"),
-    minlength : 10,
-    maxlength : 10,
-    error : false,
-    errorMessage : ""
-  }
-};
+
 class Employee {
   constructor() {
-    let self = this;
+
+    this.employeeDetail = {
+      employeeID : {
+            element : document.getElementById("employeeID"),
+            minlength : 7,
+            maxlength : 7,
+            error : false,
+            errorMessage : ""
+          },
+      employeeName : {
+            element : document.getElementById("employeeName"),
+            minlength : 3,
+            maxlength : 16,
+            error : false,
+            errorMessage : ""
+          },
+      eDayDOB : {
+            element : document.getElementById("eDayDOB")
+          },
+      eMonthDOB : {
+            element : document.getElementById("eMonthDOB")
+          },
+      eYearDOB : {
+            element : document.getElementById("eYearDOB")
+          },
+      employeeSalary : {
+            element : document.getElementById("employeeSalary"),
+            minlength : 5,
+            maxlength : 7,
+            error : false,
+            errorMessage : ""
+          },
+      employeeEmail : {
+            element : document.getElementById("employeeEmail"),
+            error : false,
+            errorMessage : ""
+          },
+      employeePhone : {
+        element : document.getElementById("employeePhone"),
+        minlength : 10,
+        maxlength : 10,
+        error : false,
+        errorMessage : ""
+      }
+    };
+
     if(document.getElementById("addemployee"))
-      document.getElementById("addemployee").addEventListener("submit", function(event) {
+      document.getElementById("addemployee").addEventListener("submit", (event) => {
         event.preventDefault();
-        self.addEmployee();
+        this.addEmployee();
       });
+      /*let inputFields = document.querySelectorAll("#addemployee input");
+      for(let loopIndex = 0; loopIndex < inputFields.length; loopIndex++) {
+        inputFields[loopIndex].addEventListener("blur", () => this.validateFields());
+      }*/
   }
   addEmployee() {
-    if(this.validateFields() == false)
+    if(!this.validateFields())
       return false;
     let submitData = {
-      "employeeID" : employeeDetail["employeeID"]["element"].value,
-      "employeeName" : employeeDetail["employeeName"]["element"].value,
-      "employeeDOB" : employeeDetail["eDayDOB"]["element"].value.toString()+"-"+
-                      employeeDetail["eMonthDOB"]["element"].value.toString().toUpperCase()+"-"+
-                      employeeDetail["eYearDOB"]["element"].value.toString(),
-      "employeeSalary" : employeeDetail["employeeSalary"]["element"].value,
-      "employeeEmail" : employeeDetail["employeeEmail"]["element"].value,
-      "employeePhone" : employeeDetail["employeePhone"]["element"].value
+      "employeeID" : this.employeeDetail["employeeID"]["element"].value,
+      "employeeName" : this.employeeDetail["employeeName"]["element"].value,
+      "employeeDOB" : this.employeeDetail["eDayDOB"]["element"].value.toString()+"-"+
+                      this.employeeDetail["eMonthDOB"]["element"].value.toString().toUpperCase()+"-"+
+                      this.employeeDetail["eYearDOB"]["element"].value.toString(),
+      "employeeSalary" : this.employeeDetail["employeeSalary"]["element"].value,
+      "employeeEmail" : this.employeeDetail["employeeEmail"]["element"].value,
+      "employeePhone" : this.employeeDetail["employeePhone"]["element"].value
     }
 
     alert("Submitted Data.");
@@ -82,72 +88,72 @@ class Employee {
   }
   validateFields() {
     //Check employee ID
-    if(regexPattern["employeeID"].test(employeeDetail["employeeID"]["element"].value) == false) { //Check if ACEID is in proper format
-      employeeDetail["employeeID"]["errorMessage"] = "Employee ACEID should be in the format <strong>ACE</strong> followed by 4 digits.";
-      employeeDetail["employeeID"]["error"] = true;
+    if(regexPattern["employeeID"].test(this.employeeDetail["employeeID"]["element"].value) == false) { //Check if ACEID is in proper format
+      this.employeeDetail["employeeID"]["errorMessage"] = "Employee ACEID should be in the format <strong>ACE</strong> followed by 4 digits.";
+      this.employeeDetail["employeeID"]["error"] = true;
     }
-    else if(Number(employeeDetail["employeeID"]["element"].value.substring(3,7)) < 1) { //ACEID: 0000 is invalid.
-      employeeDetail["employeeID"]["errorMessage"] = "Please enter valid ACEID. ID Format: <strong>ACE</strong> followed by 4 digits.";
-      employeeDetail["employeeID"]["error"] = true;
+    else if(Number(this.employeeDetail["employeeID"]["element"].value.substring(3,7)) < 1) { //ACEID: 0000 is invalid.
+      this.employeeDetail["employeeID"]["errorMessage"] = "Please enter valid ACEID. ID Format: <strong>ACE</strong> followed by 4 digits.";
+      this.employeeDetail["employeeID"]["error"] = true;
     }
     else
-      employeeDetail["employeeID"]["error"] = false;
+      this.employeeDetail["employeeID"]["error"] = false;
     //Check Employee Name
-    if((employeeDetail["employeeName"]["element"].value.length < employeeDetail["employeeName"]["minlength"]) || (employeeDetail["employeeName"]["element"].value.length > employeeDetail["employeeName"]["maxlength"])) {
-      employeeDetail["employeeName"]["errorMessage"] = `Length of name should be between ${employeeDetail["employeeName"]["minlength"]} to ${employeeDetail["employeeName"]["maxlength"]} characters.`;
-      employeeDetail["employeeName"]["error"] = true;
+    if((this.employeeDetail["employeeName"]["element"].value.length < this.employeeDetail["employeeName"]["minlength"]) || (this.employeeDetail["employeeName"]["element"].value.length > this.employeeDetail["employeeName"]["maxlength"])) {
+      this.employeeDetail["employeeName"]["errorMessage"] = `Length of name should be between ${this.employeeDetail["employeeName"]["minlength"]} to ${this.employeeDetail["employeeName"]["maxlength"]} characters.`;
+      this.employeeDetail["employeeName"]["error"] = true;
     }
-    else if(regexPattern["invalidName"].test(employeeDetail["employeeName"]["element"].value) == true) { //Check for special characters or numbers.
-      employeeDetail["employeeName"]["errorMessage"] = "Name should not contain numbers OR special characters.";
-      employeeDetail["employeeName"]["error"] = true;
+    else if(regexPattern["invalidName"].test(this.employeeDetail["employeeName"]["element"].value) == true) { //Check for special characters or numbers.
+      this.employeeDetail["employeeName"]["errorMessage"] = "Name should not contain numbers OR special characters.";
+      this.employeeDetail["employeeName"]["error"] = true;
     }
-    else if(isValidFullName() == false) {                                         //Check for whitespace and Allow spaces between first, middle and lastname
-      employeeDetail["employeeName"]["errorMessage"] = "Only a single whitespace must be present between words. Allowed characters - [A-Z, \"whitespace\"]";
-      employeeDetail["employeeName"]["error"] = true;
+    else if(isValidFullName(this.employeeDetail["employeeName"]["element"].value) == false) {                                         //Check for whitespace and Allow spaces between first, middle and lastname
+      this.employeeDetail["employeeName"]["errorMessage"] = "Only a single whitespace must be present between words. Allowed characters - [A-Z, \"whitespace\"]";
+      this.employeeDetail["employeeName"]["error"] = true;
     }
     else
-      employeeDetail["employeeName"]["error"] = false;
+      this.employeeDetail["employeeName"]["error"] = false;
 
-    if((employeeDetail["employeeSalary"]["element"].value < 5000) || (employeeDetail["employeeSalary"]["element"].value > 9999999) || (employeeDetail["employeeSalary"]["element"].value == "")) {
-      employeeDetail["employeeSalary"]["errorMessage"] = "Acceptable salary range: &#8377;5,000 to &#8377;1,00,00,00.";
-      employeeDetail["employeeSalary"]["error"] = true;
+    if((this.employeeDetail["employeeSalary"]["element"].value < 5000) || (this.employeeDetail["employeeSalary"]["element"].value > 9999999) || (this.employeeDetail["employeeSalary"]["element"].value == "")) {
+      this.employeeDetail["employeeSalary"]["errorMessage"] = "Acceptable salary range: &#8377;5,000 to &#8377;1,00,00,00.";
+      this.employeeDetail["employeeSalary"]["error"] = true;
     }
-    else if(isNaN(parseInt(employeeDetail["employeeSalary"]["element"].value)) == true) {
-      employeeDetail["employeeSalary"]["errorMessage"] = "Salary should contain only numbers and must be in the range &#8377;5,000 to &#8377;1,00,00,00.";
-      employeeDetail["employeeSalary"]["error"] = true;
+    else if(isNaN(parseInt(this.employeeDetail["employeeSalary"]["element"].value)) == true) {
+      this.employeeDetail["employeeSalary"]["errorMessage"] = "Salary should contain only numbers and must be in the range &#8377;5,000 to &#8377;1,00,00,00.";
+      this.employeeDetail["employeeSalary"]["error"] = true;
     }
     else
-      employeeDetail["employeeSalary"]["error"] = false;
+      this.employeeDetail["employeeSalary"]["error"] = false;
 
     //Check employee phone number
-    if((employeeDetail["employeePhone"]["element"].value.length < employeeDetail["employeePhone"]["minlength"]) || (employeeDetail["employeePhone"]["element"].value.length > employeeDetail["employeePhone"]["maxlength"])) {
-      employeeDetail["employeePhone"]["errorMessage"] = "Phone number should have only 10 digits.";
-      employeeDetail["employeePhone"]["error"] = true;
+    if((this.employeeDetail["employeePhone"]["element"].value.length < this.employeeDetail["employeePhone"]["minlength"]) || (this.employeeDetail["employeePhone"]["element"].value.length > this.employeeDetail["employeePhone"]["maxlength"])) {
+      this.employeeDetail["employeePhone"]["errorMessage"] = "Phone number should have only 10 digits.";
+      this.employeeDetail["employeePhone"]["error"] = true;
     }
-    else if(regexPattern["phoneNumber"].test(employeeDetail["employeePhone"]["element"].value) == false) {
-      employeeDetail["employeePhone"]["errorMessage"] = "Enter a valid phone number. Valid number starts with digit 7, 8 or 9.";
-      employeeDetail["employeePhone"]["error"] = true;
+    else if(regexPattern["phoneNumber"].test(this.employeeDetail["employeePhone"]["element"].value) == false) {
+      this.employeeDetail["employeePhone"]["errorMessage"] = "Enter a valid phone number. Valid number starts with digit 7, 8 or 9.";
+      this.employeeDetail["employeePhone"]["error"] = true;
     }
     else
-      employeeDetail["employeePhone"]["error"] = false;
+      this.employeeDetail["employeePhone"]["error"] = false;
 
     //Check employee Email
-    if(regexPattern["email"].test(employeeDetail["employeeEmail"]["element"].value) == false) {
-      employeeDetail["employeeEmail"]["errorMessage"] = "Please enter a valid Email. Email Format: username@domain-name";
-      employeeDetail["employeeEmail"]["error"] = true;
+    if(regexPattern["email"].test(this.employeeDetail["employeeEmail"]["element"].value) == false) {
+      this.employeeDetail["employeeEmail"]["errorMessage"] = "Please enter a valid Email. Email Format: username@domain-name";
+      this.employeeDetail["employeeEmail"]["error"] = true;
     }
     else
-      employeeDetail["employeeEmail"]["error"] = false;
+      this.employeeDetail["employeeEmail"]["error"] = false;
 
     let status = true;
     //Check for the results of validation
-    for(let key in employeeDetail) {
-      if(employeeDetail[key]["error"] == true) {
-        printError(employeeDetail[key]);
+    for(let key in this.employeeDetail) {
+      if(this.employeeDetail[key]["error"] == true) {
+        printError(this.employeeDetail[key]);
         status = false;
       }
       else {
-        if(employeeDetail[key].hasOwnProperty("error")) removeError(employeeDetail[key]);
+        if(this.employeeDetail[key].hasOwnProperty("error")) removeError(this.employeeDetail[key]);
       }
     }
     return status;
@@ -155,13 +161,14 @@ class Employee {
 
 }
 
-window.addEventListener('load', () => new Employee());
+let employee;
+window.addEventListener('load', () => employee = new Employee());
 
-function isValidFullName() {
+function isValidFullName(name) {
   let spaceCount = 0, wordCount = 0;
-  while(regexPattern["whiteSpace"].exec(employeeDetail["employeeName"]["element"].value) != null)
+  while(regexPattern["whiteSpace"].exec(name) != null)
     ++spaceCount;                                                               // No. of spaces
-  while(regexPattern["word"].exec(employeeDetail["employeeName"]["element"].value) != null)
+  while(regexPattern["word"].exec(name) != null)
     ++wordCount;                                                                //No. of words
   if((wordCount - 1) == spaceCount)
     return true;                                                                // No consecutive spaces

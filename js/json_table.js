@@ -16,7 +16,6 @@ class EmptyFieldError extends RequestError {
 
 const tableStructure = {
   tableElement : document.getElementById("showdata"),
-  recordPerPage : 5,
   initialPage : 1,
   currentPage : 1,
   totalPages : 0,
@@ -25,9 +24,13 @@ const tableStructure = {
 
 let employeeJson = { };
 const REQUEST_STATUS_OK = 200;
+const JSON_REQUEST_URL = "http://127.0.0.1/emp_es6/employee.json";
+const RECORD_PER_PAGE = 5;
 //JSON DATA CLASS
-class JsonXhrRequest {
+class ListService {
   constructor(url,requestMethod) {
+    this.recordPerPage = RECORD_PER_PAGE;
+    this.totalPages = 0;
     this.responseType = 'json';
     this.requestJson(url, requestMethod);
   }
@@ -39,7 +42,7 @@ class JsonXhrRequest {
     jsonRequest.send();
     jsonRequest.onreadystatechange = () => {
       try {
-        if(jsonRequest.status == REQUEST_STATUS_OK && jsonRequest.readyState == 4) {
+        if(jsonRequest.status == REQUEST_STATUS_OK) {
           employeeJson = jsonRequest.response;
           document.dispatchEvent(responseRecieved);
         }
@@ -53,12 +56,15 @@ class JsonXhrRequest {
   }
 }
 //new JsonTabulated(1) for initializing table
-class JsonData extends JsonXhrRequest {
+class EmployeeListService extends ListService {
   constructor(url, requestMethod) {
-    super(url, requestMethod)
+    super(url, requestMethod);
+    this.table =  document.getElementById("showdata");
+    this.currentPage = 1;
+    this.tableInit = false;
   }
 
-  initTable(pages) {
+  initTable(pages) {                                                            // Initialize the table
     if(pages > 1) {
       let buttonContainer = document.querySelector('.button-container');
       let prevButton = document.createElement("button");
@@ -68,14 +74,14 @@ class JsonData extends JsonXhrRequest {
       buttonContainer.appendChild(prevButton);
       const self = this;
       prevButton.addEventListener("click", (event) => this.scrollRecords(event.target));
-      for(let loopIndex = 1; loopIndex <= tableStructure.totalPages; loopIndex++) {
+      for(let loopIndex = 1; loopIndex <= this.totalPages; loopIndex++) {
         let pageNumberButton = document.createElement("button");
         pageNumberButton.innerText = loopIndex;
         pageNumberButton.className = "emp-button";
         buttonContainer.appendChild(pageNumberButton);
         pageNumberButton.addEventListener("click", (event) => {
-          tableStructure.currentPage = Number(event.target.innerText);
-          self.getRecordsForPage(tableStructure.currentPage);
+          this.currentPage = Number(event.target.innerText);
+          this.getRecordsForPage(this.currentPage);
         });
       }
       let nextButton = document.createElement("button");
@@ -85,28 +91,28 @@ class JsonData extends JsonXhrRequest {
       buttonContainer.appendChild(nextButton);
       nextButton.addEventListener("click", (event) => self.scrollRecords(event.target));
     }
-    tableStructure.isTableInit = true;
+    this.tableInit = true;
   }
   getRecordsForPage(page) {
-    tableStructure.currentPage = page;
+    this.currentPage = page;
     let recordCount = 1;
     if(employeeJson == null)
       return false;
     else
       recordCount = Object.keys(employeeJson).length;
-    tableStructure.totalPages = Math.ceil(recordCount / tableStructure.recordPerPage);
-    if(tableStructure.isTableInit == false)
-      this.initTable(tableStructure.totalPages);
-    let startIndex = ((tableStructure.currentPage - 1) * tableStructure.recordPerPage) + 1,
-        endIndex = startIndex + tableStructure.recordPerPage;
-    this.removeRows(tableStructure.tableElement.rows.length - 1);
+    this.totalPages = Math.ceil(recordCount / this.recordPerPage);
+    if(this.tableInit == false)
+      this.initTable(this.totalPages);
+    let startIndex = ((this.currentPage - 1) * this.recordPerPage) + 1,
+        endIndex = startIndex + this.recordPerPage;
+    this.removeRows(this.table.rows.length - 1);
     let singlePageRecords = employeeJson.slice(startIndex, endIndex);
     this.insertIntoTable(singlePageRecords);
   }
   insertIntoTable(records) {
     for(let objectKey in records) {                                             //Get each employee's detail
 
-      let tableRow = tableStructure.tableElement.insertRow(-1);
+      let tableRow = this.table.insertRow(-1);
       let singleRecord = records[objectKey];                                    //Store all details of one employee
       for(let objectKey in singleRecord) {                                       //Insert each row. Row count = 0 initially.                                                           //INITIALIZE to -1 for each row
         try {                                                                   //GO through details of an employee
@@ -127,18 +133,18 @@ class JsonData extends JsonXhrRequest {
       const self = this;
       editButton.addEventListener("click", (event) => self.editRow(event.target.parentNode));                                         //Make each created row editable
     }
-    document.getElementById("nextButton").disabled = (tableStructure.currentPage == tableStructure.totalPages) ? true : false;
-    document.getElementById("prevButton").disabled = (tableStructure.currentPage == 1) ? true : false;
+    document.getElementById("nextButton").disabled = (this.currentPage == this.totalPages) ? true : false;
+    document.getElementById("prevButton").disabled = (this.currentPage == 1) ? true : false;
   }
   scrollRecords(button) {
     let direction = button.innerText.toLowerCase();                                   // Direction - forward (next) or backward (prev)
-    if((direction == "next") && (tableStructure.currentPage < tableStructure.totalPages)) {
-      ++tableStructure.currentPage;
-      this.getRecordsForPage(tableStructure.currentPage);
+    if((direction == "next") && (this.currentPage < this.totalPages)) {
+      ++this.currentPage;
+      this.getRecordsForPage(this.currentPage);
     }
-    if((direction == "prev") && (tableStructure.currentPage > 1)) {
-      --tableStructure.currentPage;
-      this.getRecordsForPage(tableStructure.currentPage);
+    if((direction == "prev") && (this.currentPage > 1)) {
+      --this.currentPage;
+      this.getRecordsForPage(this.currentPage);
     }
   }
   editRow(cellElement) {
@@ -217,17 +223,16 @@ class JsonData extends JsonXhrRequest {
   }
   removeRows(rowCount) {
     for(; rowCount > 0; --rowCount)
-      tableStructure.tableElement.deleteRow(rowCount);
+      this.table.deleteRow(rowCount);
   }
 }
-
 let json = null;
-document.addEventListener("DOMContentLoaded", () => json = new JsonData("http://127.0.0.1/emp_es6/employee.json","POST"));
-let responseRecieved = new CustomEvent("ResponseRecieved");
-document.addEventListener("ResponseRecieved", () => json.getRecordsForPage(tableStructure.currentPage));
+document.addEventListener("DOMContentLoaded", () => json = new EmployeeListService(JSON_REQUEST_URL,"POST"));
+let responseRecieved = new CustomEvent("ResponseReceived");
+document.addEventListener("ResponseReceived", () => json.getRecordsForPage(json.currentPage));
 
 function showError(name, message) {
-  tableStructure.tableElement.style.display = 'none';
+  this.table.style.display = 'none';
   let errorMessage = document.getElementById("tableErrorBox");
   errorMessage.style.display = 'block';
   errorMessage.innerHTML = "ERROR: <strong>" + name + "</strong>: " + message + "<br /> Returned Response: ";

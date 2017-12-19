@@ -1,12 +1,12 @@
-class Users {
-  constructor(user, password) {
-    this.user = user;
+class User {
+  constructor(username, password) {
+    this.username = username;
     this.password = password;
     this.createSession();
   }
   createSession() {                                                             //To create session for the user.
     if(this.validateLogin() == true) {
-      if(this.user == "admin" || this.password == "password") {
+      if(this.username == "admin" || this.password == "password") {
         sessionStorage.setItem("loggedIn","true");
         window.location.href = "display.html";
       }
@@ -29,15 +29,15 @@ class Users {
             errorMessage : ""
       }
     }
-    if(regexPattern["whiteSpace"].test(this.user)) {
+    if(regexPattern["whiteSpace"].test(this.username)) {
       users["username"]["errorMessage"] = "Username should not contain whitespace";
       users["username"]["error"] = true;
     }
-    else if((this.user.length < 5) || (this.user.length > 16)) {
+    else if((this.username.length < 5) || (this.username.length > 16)) {
       users["username"]["errorMessage"] = "Username should have 5 to 16 characters.";
       users["username"]["error"] = true;
     }
-    else if(regexPattern["username"].test(this.user)) {
+    else if(regexPattern["username"].test(this.username)) {
       users["username"]["errorMessage"] = "Username should not contain special characters.";
       users["username"]["error"] = true;
     }
@@ -62,7 +62,7 @@ class Users {
 document.addEventListener("DOMContentLoaded", () => {
   let siginButton = document.getElementById("signin");
   (siginButton == null) ? null : siginButton.addEventListener("click", () => {  //If sigin button is present, add event listener click for it.
-    new Users(document.getElementById("username").value, document.getElementById("password").value);
+    new User(document.getElementById("username").value, document.getElementById("password").value);
   });
 });
 //Check if user is logged in
