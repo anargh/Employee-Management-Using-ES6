@@ -7,22 +7,13 @@ class RequestError extends Error {
   }
 }
 class EmptyFieldError extends RequestError {
-    constructor(message) {
-      super(message);
-      this.message = message;
-      this.name = "EmptyFieldError";
-    }
+  constructor(message) {
+    super(message);
+    this.message = message;
+    this.name = "EmptyFieldError";
+  }
 }
 
-const tableStructure = {
-  tableElement : document.getElementById("showdata"),
-  initialPage : 1,
-  currentPage : 1,
-  totalPages : 0,
-  isTableInit : false
-}
-
-let employeeJson = { };
 const REQUEST_STATUS_OK = 200;
 const JSON_REQUEST_URL = "http://127.0.0.1/emp_es6/employee.json";
 const RECORD_PER_PAGE = 5;
@@ -33,25 +24,32 @@ class ListService {
     this.totalPages = 0;
     this.responseType = 'json';
     this.requestJson(url, requestMethod);
+    this.jsonData = { };
   }
 
   requestJson(url,requestMethod) {
-    let jsonRequest = new XMLHttpRequest();
-    jsonRequest.open(requestMethod, url);
-    jsonRequest.responseType = this.responseType;
-    jsonRequest.send();
-    jsonRequest.onreadystatechange = () => {
-      try {
-        if(jsonRequest.status == REQUEST_STATUS_OK) {
-          employeeJson = jsonRequest.response;
-          document.dispatchEvent(responseRecieved);
+    try {
+      let jsonRequest = new XMLHttpRequest();
+      jsonRequest.open(requestMethod, url);
+      jsonRequest.responseType = this.responseType;
+      jsonRequest.send();
+      jsonRequest.onload = () => {
+        try {
+          if(jsonRequest.status === REQUEST_STATUS_OK) {
+            this.jsonData = jsonRequest.response;
+            document.dispatchEvent(responseRecieved);
+          }
+          else
+            throw new RequestError(`There was a problem retrieving the requested resource. Returned Error ${jsonRequest.statusText}`);
+        } catch(error) {
+          if(error.name == "RequestError")
+            showError(error.name, error.message);
+          else
+            showError(error.name, error.message);
         }
-        else
-          throw new RequestError("There was a problem retrieving the requested resource.");
       }
-      catch(error if error instanceof RequestError) {
+    } catch(error) {
         showError(error.name, error.message);
-      }
     }
   }
 }
@@ -96,17 +94,17 @@ class EmployeeListService extends ListService {
   getRecordsForPage(page) {
     this.currentPage = page;
     let recordCount = 1;
-    if(employeeJson == null)
+    if(this.jsonData == null)
       return false;
     else
-      recordCount = Object.keys(employeeJson).length;
+      recordCount = Object.keys(this.jsonData).length;
     this.totalPages = Math.ceil(recordCount / this.recordPerPage);
     if(this.tableInit == false)
       this.initTable(this.totalPages);
     let startIndex = ((this.currentPage - 1) * this.recordPerPage) + 1,
         endIndex = startIndex + this.recordPerPage;
     this.removeRows(this.table.rows.length - 1);
-    let singlePageRecords = employeeJson.slice(startIndex, endIndex);
+    let singlePageRecords = this.jsonData.slice(startIndex, endIndex);
     this.insertIntoTable(singlePageRecords);
   }
   insertIntoTable(records) {
@@ -118,13 +116,15 @@ class EmployeeListService extends ListService {
         try {                                                                   //GO through details of an employee
           if(singleRecord[objectKey] == undefined || singleRecord[objectKey] == "") {
             throw new EmptyFieldError("Field " + objectKey + " is empty. Please check the data.");
-            break;
           }
-          let tableCell = tableRow.insertCell(-1);                       // Insert cell in each row
-          let cellContent = document.createTextNode(singleRecord[objectKey]); // Insert cell content
-          tableCell.appendChild(cellContent);                                     // Append the cell content to the table cell
-        } catch(error if error instanceof EmptyFieldError) {
-            showError(error.name, error.message);;
+          let tableCell = tableRow.insertCell(-1);                              // Insert cell in each row
+          let cellContent = document.createTextNode(singleRecord[objectKey]);   // Insert cell content
+          tableCell.appendChild(cellContent);                                   // Append the cell content to the table cell
+        } catch(error) {
+            if(error.name = "EmptyFieldError")
+              showError(error.name, error.message);
+            else
+              showError(error.name, error.message);
         }
       }
       let editButton = document.createElement("button");
@@ -232,7 +232,8 @@ let responseRecieved = new CustomEvent("ResponseReceived");
 document.addEventListener("ResponseReceived", () => json.getRecordsForPage(json.currentPage));
 
 function showError(name, message) {
-  this.table.style.display = 'none';
+  console.log("Called");
+  document.getElementById("showdata").style.display = 'none';
   let errorMessage = document.getElementById("tableErrorBox");
   errorMessage.style.display = 'block';
   errorMessage.innerHTML = "ERROR: <strong>" + name + "</strong>: " + message + "<br /> Returned Response: ";
